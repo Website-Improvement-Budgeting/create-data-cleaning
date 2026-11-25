@@ -476,7 +476,124 @@ budget_history = pd.DataFrame(columns=[
 
 
 # ============================================================
-# 9. EXPORT
+# 9. ADDITIONAL SCHEMA-ONLY TABLE TEMPLATES
+# ============================================================
+#
+# Tabel berikut memang ada di schema_silog.sql, tetapi belum
+# menghasilkan data dari pipeline saat ini.
+# HANYA header/struktur yang dibuat; tidak ada data yang direkayasa.
+#
+# 8 tabel tambahan:
+# 1. budget_request_batch
+# 2. approval_import_batches
+# 3. approval_import_rows
+# 4. budget_trend_active_period
+# 5. budget_trend_import
+# 6. budget_trend_monthly
+# 7. commitment_item_name_staging
+# 8. users_backup_before_merge_20261021
+
+budget_request_batch = pd.DataFrame(columns=[
+    "batch_id",
+    "batch_code",
+    "user_id",
+    "uploaded_filename",
+    "created_at",
+])
+
+approval_import_batches = pd.DataFrame(columns=[
+    "approval_import_id",
+    "batch_id",
+    "uploaded_by",
+    "uploaded_filename",
+    "file_sha256",
+    "import_status",
+    "total_rows",
+    "valid_rows",
+    "invalid_rows",
+    "uploaded_at",
+    "previewed_at",
+    "confirmed_at",
+    "completed_at",
+])
+
+approval_import_rows = pd.DataFrame(columns=[
+    "approval_import_row_id",
+    "approval_import_id",
+    "request_id",
+    "excel_row_number",
+    "instruction",
+    "fund_code",
+    "funds_center_code",
+    "commitment_item_code",
+    "amount",
+    "validation_status",
+    "validation_message",
+    "created_at",
+    "source_budget_id",
+])
+
+budget_trend_active_period = pd.DataFrame(columns=[
+    "active_period_id",
+    "fiscal_year",
+    "month",
+    "trend_import_id",
+    "activated_by",
+    "activated_at",
+])
+
+budget_trend_import = pd.DataFrame(columns=[
+    "trend_import_id",
+    "fiscal_year",
+    "reporting_month",
+    "update_type",
+    "update_scope",
+    "version_number",
+    "filename",
+    "notes",
+    "uploaded_by",
+    "uploaded_at",
+    "status",
+    "validation_summary",
+])
+
+budget_trend_monthly = pd.DataFrame(columns=[
+    "trend_monthly_id",
+    "trend_import_id",
+    "entity_id",
+    "gl_account",
+    "gl_account_name",
+    "commitment_item_id",
+    "fiscal_year",
+    "month",
+    "rkap_amount",
+    "realization_amount",
+    "created_at",
+    "ce_grup",
+    "kode_ce_grup",
+    "nama_ce_grup",
+    "source_commitment_item_code",
+    "mapping_status",
+    "source_row_number",
+])
+
+commitment_item_name_staging = pd.DataFrame(columns=[
+    "commitment_item_code",
+    "commitment_item_name",
+])
+
+users_backup_before_merge_20261021 = pd.DataFrame(columns=[
+    "user_id",
+    "username",
+    "password",
+    "role",
+    "entity_id",
+    "biro_id",
+])
+
+
+# ============================================================
+# 10. EXPORT
 # ============================================================
 
 tables = {
@@ -494,6 +611,14 @@ tables = {
     "approval_decision": approval_decision,
     "budget_allocation": budget_allocation,
     "budget_history": budget_history,
+    "budget_request_batch": budget_request_batch,
+    "approval_import_batches": approval_import_batches,
+    "approval_import_rows": approval_import_rows,
+    "budget_trend_active_period": budget_trend_active_period,
+    "budget_trend_import": budget_trend_import,
+    "budget_trend_monthly": budget_trend_monthly,
+    "commitment_item_name_staging": commitment_item_name_staging,
+    "users_backup_before_merge_20261021": users_backup_before_merge_20261021,
 }
 
 print("\n" + "=" * 70)
@@ -510,4 +635,5 @@ print(f"Budget master : {len(budget_master):,} rows")
 print(f"FC_CI         : {(budget_master['budget_scope'] == 'FC_CI').sum():,}")
 print(f"CI_ONLY       : {(budget_master['budget_scope'] == 'CI_ONLY').sum():,}")
 print(f"Output folder : {OUTPUT_DIR}")
+print(f"Tables exported: {len(tables)}")
 print("=" * 70)
